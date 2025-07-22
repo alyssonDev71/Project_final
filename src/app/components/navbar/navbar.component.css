@@ -1,0 +1,113 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap");
+
+.navbar {
+  font-family: "Montserrat", sans-serif;
+  background: rgba(15, 32, 39, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.8rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 0 2rem;
+}
+
+/* Elemento vazio para manter o nome centralizado */
+.navbar-placeholder {
+  flex: 1;
+}
+
+/* Nome "TRAJETUS" centralizado */
+.navbar-brand-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.brand-link {
+  color: #ffffff;
+  display: flex;
+  text-decoration: none;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+.brand-link:hover {
+  color: #a8edea;
+}
+
+/* Navegação à direita */
+.navbar-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.navbar-nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  color: #a8edea;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .navbar-brand-center {
+    position: static;
+    transform: none;
+    margin-bottom: 1rem;
+  }
+
+  .navbar-placeholder {
+    display: none;
+  }
+
+  .navbar-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: center;
+  }
+
+  .nav-link {
+    width: 100%;
+    text-align: center;
+  }
+}

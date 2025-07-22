@@ -1,0 +1,122 @@
+<!-- Animação de fundo -->
+<div class="background-animation">
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+</div>
+
+<div class="login-container">
+  <!-- Seção do Formulário -->
+  <div class="login-form-section">
+    <div class="login-header">
+      <img src="assets/img/trajetus.png" alt="Logo Trajetus" class="logo">
+      <h2>Acesse sua conta</h2>   
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-wrapper">
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email"
+            placeholder="Digite seu email"
+            [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+          >
+          <i class="fas fa-envelope input-icon"></i>
+        </div>
+        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+          <span class="error-message">Email é obrigatório e deve ser válido</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <div class="input-wrapper">
+          <input 
+            [type]="showPassword() ? 'text' : 'password'"
+            id="password" 
+            formControlName="password"
+            placeholder="Digite sua senha"
+            [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+          >
+          <i 
+            [class]="showPassword() ? 'fas fa-eye-slash' : 'fas fa-eye'"
+            class="input-icon password-toggle"
+            (click)="togglePasswordVisibility()"
+          ></i>
+        </div>
+        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+          <span class="error-message">Senha é obrigatória (mínimo 6 caracteres)</span>
+        }
+      </div>
+
+      <div class="form-options">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="rememberMe">
+          Lembrar-me
+        </label>
+        <a href="#" class="forgot-password" (click)="onForgotPassword($event)">Esqueceu a senha?</a>
+      </div>
+
+      <button 
+        type="submit" 
+        class="btn-login"
+        [class.loading]="isLoading()"
+        [disabled]="loginForm.invalid || isLoading()"
+      >
+        {{ isLoading() ? '' : 'Entrar' }}
+      </button>
+    </form>
+
+    <div class="divider">
+      <span>ou</span>
+    </div>
+
+    <button class="btn-google" (click)="onGoogleLogin()" [disabled]="isLoading()">
+      <i class="fab fa-google google-icon"></i>
+      Continuar com Google
+    </button>
+
+    <div class="login-footer">
+      <p>
+        Não tem uma conta? 
+        <a href="#" class="signup-link" (click)="onSignUp($event)">Criar conta</a>
+      </p>
+    </div>
+
+    @if (message()) {
+      <div class="message" [class]="messageType()">
+        {{ message() }}
+      </div>
+    }
+  </div>
+
+  <div class="login-visual">
+    <div class="visual-overlay"></div>
+    <div class="visual-content">
+      <h3>Bem-vindo à Trajetus</h3>
+      <p class="visual-subtitle">Tecnologia inteligente para logística moderna</p>
+      <div class="feature-list">
+        <div class="feature-item">
+          <i class="fas fa-route feature-icon"></i>
+          <span>Otimização de Rotas</span>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-chart-line feature-icon"></i>
+          <span>Dashboard Avançado</span>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-truck feature-icon"></i>
+          <span>Monitoramento em Tempo Real</span>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-leaf feature-icon"></i>
+          <span>Logística Sustentável</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

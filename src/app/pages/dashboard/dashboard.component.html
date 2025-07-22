@@ -1,0 +1,86 @@
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="header-content">
+            <div class="dashboard-logo">🚛</div>
+            <div class="header-info">
+                <h1>Bom te ver de novo!</h1>
+                <p>Analise as novas informações das suas rotas e otimize suas entregas...</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="btn-primary" (click)="createNewRoute()">Nova Rota</button>
+        </div>
+    </div>
+
+    <div class="dashboard-stats">
+        <div class="stat-card" *ngFor="let stat of dashboardStats">
+            <div class="stat-icon">{{ stat.icon }}</div>
+            <div class="stat-info">
+                <h3>{{ stat.value }}</h3>
+                <p>{{ stat.label }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">Rotas em Andamento</h2>
+        <div class="trips-grid">
+            <div class="trip-card" *ngFor="let trip of tripsInProgress">
+                <div class="trip-image">
+                    <div class="image-placeholder">{{ trip.imagePlaceholder }}</div>
+                    <div class="trip-date">{{ trip.date }}</div>
+                </div>
+                <div class="trip-info">
+                    <h3>{{ trip.title }}</h3>
+                    <p>{{ trip.description }}</p>
+                    <div class="trip-details">
+                        <span class="detail-item" *ngFor="let detail of trip.details">{{ detail }}</span>
+                    </div>
+                    <div class="trip-status" [ngClass]="trip.statusClass">
+                        {{ trip.status }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">Otimizações Sugeridas</h2>
+        <div class="recommendations-grid">
+            <div class="recommendation-card" *ngFor="let rec of optimizationsSuggested">
+                <div class="rec-image">
+                    <div class="image-placeholder">{{ rec.imagePlaceholder }}</div>
+                    <div class="rec-score">{{ rec.score }}</div>
+                </div>
+                <div class="rec-info">
+                    <h3>{{ rec.title }}</h3>
+                    <p>{{ rec.description }}</p>
+                    <div class="rec-price">Economia: {{ rec.economy }}</div>
+                    <button class="btn-secondary" (click)="viewDetails()">Ver Detalhes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">Histórico de Entregas</h2>
+        <div class="history-list">
+            <div class="history-item" *ngFor="let item of deliveryHistory">
+                <div class="history-image">
+                    <div class="image-placeholder">{{ item.imagePlaceholder }}</div>
+                </div>
+                <div class="history-info">
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.details }}</p>
+                    <p>{{ item.deliveries }}</p>
+                </div>
+                <div class="history-rating">
+                    <div class="rating-stars">
+                        <span *ngFor="let _ of getStarArray(item.rating)">⭐</span>
+                    </div>
+                    <span class="rating-text">{{ item.ratingText }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

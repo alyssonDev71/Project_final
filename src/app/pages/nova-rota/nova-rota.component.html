@@ -1,0 +1,60 @@
+<div class="nova-rota-container">
+    <div class="nova-rota-header">
+        <div class="header-content">
+            <div class="nova-rota-logo">🚛</div>
+            <div class="header-info">
+                <h1>Nova Rota</h1>
+                <p>Crie uma nova rota de entrega otimizada</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="btn-secondary" (click)="voltarDashboard()">← Voltar</button>
+        </div>
+    </div>
+
+    <div class="nova-rota-form">
+        <div class="form-section">
+            <h2>Informações da Rota</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Origem</label>
+                    <input type="text" placeholder="Digite o endereço de origem" />
+                </div>
+                <div class="form-group">
+                    <label>Destino</label>
+                    <input type="text" placeholder="Digite o endereço de destino" />
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Veículo</label>
+                    <select>
+                        <option>Selecione o tipo de veículo</option>
+                        <option>🚚 Van</option>
+                        <option>🚛 Caminhão Pequeno</option>
+                        <option>🚐 Caminhão Grande</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Data da Entrega</label>
+                    <input type="date" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>Paradas</h2>
+            <div class="paradas-list">
+                <div class="parada-item">
+                    <span class="parada-numero">1</span>
+                    <input type="text" placeholder="Endereço da parada" />
+                    <button class="btn-remove">×</button>
+                </div>
+            </div>
+            <button class="btn-add-parada">+ Adicionar Parada</button>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn-primary">Criar Rota</button>
+            <button class="btn-secondary" (click)="voltarDashboard()">Cancelar</button>
+        </div>
+    </div>
+</div>
