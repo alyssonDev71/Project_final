@@ -61,6 +61,31 @@
         <a href="#" class="forgot-password" (click)="onForgotPassword($event)">Esqueceu a senha?</a>
       </div>
 
+      <!-- Seção de Termos e Condições LGPD -->
+      <div class="terms-section">
+        <label class="terms-checkbox-label" [class.error]="loginForm.get('acceptTerms')?.invalid && loginForm.get('acceptTerms')?.touched">
+          <input 
+            type="checkbox" 
+            formControlName="acceptTerms"
+            class="terms-checkbox"
+          >
+          <span class="terms-text">
+            Li e aceito os 
+            <a href="#" class="terms-link" (click)="openTermsModal(); $event.preventDefault()">
+              Termos e Condições
+            </a> 
+            e a 
+            <a href="#" class="terms-link" (click)="openTermsModal(); $event.preventDefault()">
+              Política de Privacidade
+            </a>
+            em conformidade com a LGPD
+          </span>
+        </label>
+        @if (loginForm.get('acceptTerms')?.invalid && loginForm.get('acceptTerms')?.touched) {
+          <span class="error-message">É obrigatório aceitar os termos e condições</span>
+        }
+      </div>
+
       <button 
         type="submit" 
         class="btn-login"
@@ -120,3 +145,83 @@
     </div>
   </div>
 </div>
+
+<!-- Modal de Termos e Condições -->
+@if (showTermsModal()) {
+  <div class="modal-overlay" (click)="closeTermsModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Termos e Condições - LGPD</h3>
+        <button class="modal-close" (click)="closeTermsModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="terms-content">
+          <h4>1. Coleta e Uso de Dados Pessoais</h4>
+          <p>
+            Em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018), 
+            informamos que coletamos e tratamos seus dados pessoais exclusivamente para:
+          </p>
+          <ul>
+            <li>Autenticação e acesso à plataforma Trajetus</li>
+            <li>Garantir a segurança de sua conta</li>
+            <li>Melhorar nossos serviços de logística</li>
+            <li>Comunicações relacionadas ao serviço</li>
+          </ul>
+
+          <h4>2. Dados Coletados</h4>
+          <p>Os seguintes dados podem ser coletados:</p>
+          <ul>
+            <li>Endereço de email</li>
+            <li>Informações de login e autenticação</li>
+            <li>Dados de navegação e uso da plataforma</li>
+            <li>Informações fornecidas voluntariamente pelo usuário</li>
+          </ul>
+
+          <h4>3. Seus Direitos</h4>
+          <p>Conforme a LGPD, você tem direito a:</p>
+          <ul>
+            <li>Confirmação da existência de tratamento de dados</li>
+            <li>Acesso aos seus dados pessoais</li>
+            <li>Correção de dados incompletos, inexatos ou desatualizados</li>
+            <li>Anonimização, bloqueio ou eliminação de dados</li>
+            <li>Portabilidade dos dados</li>
+            <li>Revogação do consentimento</li>
+          </ul>
+
+          <h4>4. Segurança dos Dados</h4>
+          <p>
+            Implementamos medidas técnicas e organizacionais adequadas para proteger 
+            seus dados pessoais contra acesso não autorizado, alteração, divulgação 
+            ou destruição não autorizada.
+          </p>
+
+          <h4>5. Compartilhamento de Dados</h4>
+          <p>
+            Seus dados não serão compartilhados com terceiros, exceto quando 
+            necessário para o funcionamento do serviço ou quando exigido por lei.
+          </p>
+
+          <h4>6. Contato</h4>
+          <p>
+            Para exercer seus direitos ou esclarecer dúvidas sobre o tratamento 
+            de seus dados, entre em contato através do email: 
+            <a href="mailto:privacidade&#64;trajetus.com.br">privacidade&#64;trajetus.com.br</a>
+          </p>
+
+          <p class="terms-footer">
+            <strong>Última atualização:</strong> Janeiro de 2025<br>
+            <strong>Trajetus Tecnologia Ltda.</strong>
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-close" (click)="closeTermsModal()">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+}
+

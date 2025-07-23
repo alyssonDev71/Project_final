@@ -8,9 +8,7 @@
     box-sizing: border-box;
 }
 
-body { /* Note: 'body' styles typically go in a global stylesheet (styles.css) in Angular,
-          but will work here for demonstration. For true encapsulation,
-          consider how these global styles might be applied. */
+body {
     font-family: 'Roboto', sans-serif;
     min-height: 100vh;
     background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
@@ -176,6 +174,7 @@ body { /* Note: 'body' styles typically go in a global stylesheet (styles.css) i
     padding: 4rem 0;
 }
 
+/* Harmonizando as cores das seções com o padrão da home */
 .content-section:nth-child(even) {
     background: rgba(0, 0, 0, 0.1);
     border-radius: 25px;
@@ -184,7 +183,7 @@ body { /* Note: 'body' styles typically go in a global stylesheet (styles.css) i
 }
 
 .content-section:nth-child(odd):not(:first-child) {
-    background: linear-gradient(135deg, #243b55, #141e30);
+    background: linear-gradient(135deg, #203a43, #2c5364);
     border-radius: 25px;
     padding: 4rem 2rem;
     margin: 0 -2rem 4rem -2rem;
@@ -226,7 +225,7 @@ body { /* Note: 'body' styles typically go in a global stylesheet (styles.css) i
 
 .trip-image, .rec-image {
     height: 160px;
-    background: linear-gradient(45deg, #4facfe, #00f2fe);
+    background: linear-gradient(45deg, #a8edea, #4facfe);
     border-radius: 15px;
     display: flex;
     align-items: center;
@@ -234,18 +233,20 @@ body { /* Note: 'body' styles typically go in a global stylesheet (styles.css) i
     margin-bottom: 1.5rem;
     position: relative;
     overflow: hidden;
+    opacity: 0.9;
 }
 
 .image-placeholder {
     font-size: 3.5rem;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .trip-date, .rec-score {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: rgba(255, 255, 255, 0.9);
-    color: #333;
+    background: rgba(168, 237, 234, 0.9);
+    color: #2c5364;
     padding: 0.5rem 1rem;
     border-radius: 25px;
     font-weight: 600;
@@ -276,49 +277,49 @@ body { /* Note: 'body' styles typically go in a global stylesheet (styles.css) i
 }
 
 .detail-item {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(168, 237, 234, 0.2);
     padding: 0.4rem 0.8rem;
     border-radius: 12px;
     font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: #a8edea;
     font-weight: 500;
     font-family: 'Montserrat', sans-serif;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(168, 237, 234, 0.3);
 }
 
 .trip-status {
-    background: rgba(79, 172, 254, 0.2);
-    border: 1px solid rgba(79, 172, 254, 0.4);
+    background: rgba(168, 237, 234, 0.2);
+    border: 1px solid rgba(168, 237, 234, 0.4);
     border-radius: 12px;
     padding: 0.8rem 1.2rem;
     text-align: center;
     font-weight: 700;
     font-size: 1rem;
-    color: #4facfe;
+    color: #a8edea;
     font-family: 'Montserrat', sans-serif;
 }
 
 .status-confirmado {
-    background: rgba(34, 197, 94, 0.2);
-    color: #4ade80;
-    border: 1px solid rgba(34, 197, 94, 0.3);
+    background: rgba(168, 237, 234, 0.3);
+    color: #a8edea;
+    border: 1px solid rgba(168, 237, 234, 0.5);
 }
 
 .status-pendente {
-    background: rgba(251, 191, 36, 0.2);
-    color: #fbbf24;
-    border: 1px solid rgba(251, 191, 36, 0.3);
+    background: rgba(254, 214, 227, 0.2);
+    color: #fed6e3;
+    border: 1px solid rgba(254, 214, 227, 0.4);
 }
 
 .rec-price {
-    background: rgba(79, 172, 254, 0.2);
-    border: 1px solid rgba(79, 172, 254, 0.4);
+    background: rgba(168, 237, 234, 0.2);
+    border: 1px solid rgba(168, 237, 234, 0.4);
     border-radius: 12px;
     padding: 0.8rem 1.2rem;
     text-align: center;
     font-weight: 700;
     font-size: 1.1rem;
-    color: #4facfe;
+    color: #a8edea;
     font-family: 'Montserrat', sans-serif;
     margin-bottom: 1rem;
 }
@@ -352,13 +353,14 @@ body { /* Note: 'body' styles typically go in a global stylesheet (styles.css) i
 .history-image {
     width: 80px;
     height: 80px;
-    background: linear-gradient(45deg, #4facfe, #00f2fe);
+    background: linear-gradient(45deg, #a8edea, #4facfe);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2rem;
     flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .history-info {
@@ -393,7 +395,7 @@ body { /* Note: 'body' styles typically go in a global stylesheet (styles.css) i
 }
 
 .rating-text {
-    color: #4facfe;
+    color: #a8edea;
     font-weight: 600;
     font-size: 0.9rem;
     font-family: 'Montserrat', sans-serif;

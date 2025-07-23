@@ -1,4 +1,3 @@
-// login.component.ts
 import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
@@ -20,16 +19,28 @@ export class LoginComponent {
   showPassword = signal(false);
   message = signal('');
   messageType = signal('');
+  showTermsModal = signal(false);
 
   // Reactive Form
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
-    rememberMe: [false]
+    rememberMe: [false],
+    acceptTerms: [false, Validators.requiredTrue] // Novo campo obrigatório para termos
   });
 
   togglePasswordVisibility() {
     this.showPassword.update(show => !show);
+  }
+
+  // Método para abrir modal de termos
+  openTermsModal() {
+    this.showTermsModal.set(true);
+  }
+
+  // Método para fechar modal de termos
+  closeTermsModal() {
+    this.showTermsModal.set(false);
   }
 
   async onLogin() {
@@ -67,10 +78,31 @@ export class LoginComponent {
       Object.keys(this.loginForm.controls).forEach(key => {
         this.loginForm.get(key)?.markAsTouched();
       });
+
+      // Verifica especificamente se os termos não foram aceitos
+      if (!this.loginForm.get('acceptTerms')?.value) {
+        this.messageType.set('error');
+        this.message.set('É necessário aceitar os termos e condições para continuar.');
+        
+        setTimeout(() => {
+          this.message.set('');
+        }, 5000);
+      }
     }
   }
 
   async onGoogleLogin() {
+    // Verifica se os termos foram aceitos antes de prosseguir
+    if (!this.loginForm.get('acceptTerms')?.value) {
+      this.messageType.set('error');
+      this.message.set('É necessário aceitar os termos e condições para continuar.');
+      
+      setTimeout(() => {
+        this.message.set('');
+      }, 5000);
+      return;
+    }
+
     this.isLoading.set(true);
     this.message.set('Conectando com Google...');
     this.messageType.set('');

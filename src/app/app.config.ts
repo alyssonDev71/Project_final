@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideClientHydration } from '@angular/platform-browser';
 import { Routes } from '@angular/router';
 
-// Defina suas rotas aqui ou importe de app.routes.ts
+
 const routes: Routes = [
     {
         path:"",
