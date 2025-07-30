@@ -1,23 +1,16 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { NavbarComponent } from './components/navbar/navbar.component';
+import { Routes } from '@angular/router';
+import { LoginComponent } from './pages/login/login.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { NovaRotaComponent } from './pages/nova-rota/nova-rota.component';
+import { MinhasRotasComponent } from './pages/minhas-rotas/minhas-rotas.component';
+import { HomeComponent } from './pages/home/home.component';
 
-@Component({
-  selector: 'app-root',
-  standalone: true,
-  template: `
-    <div class="app">
-      <app-navbar></app-navbar>
-      <router-outlet></router-outlet>
-    </div>
-  `,
-  styleUrls: ['./app.component.css'],
-  imports: [RouterOutlet, NavbarComponent]
-})
-export class AppComponent {
-  title = 'trajetus';
-}
-
-export function routes(routes: any): import("@angular/core").Provider | import("@angular/core").EnvironmentProviders {
-    throw new Error('Function not implemented.');
-}
+export const routes: Routes = [
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'nova-rota', component: NovaRotaComponent },
+  { path: 'minhas-rotas', component: MinhasRotasComponent },
+  { path: 'home', component: HomeComponent },
+  { path: '**', redirectTo: '/login' }
+];

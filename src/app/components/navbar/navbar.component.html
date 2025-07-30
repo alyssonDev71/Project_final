@@ -1,16 +1,130 @@
 <nav class="navbar">
   <div class="navbar-container">
     <div class="navbar-placeholder"></div>
+    
     <div class="navbar-brand-center">
       <a routerLink="/" class="brand-link">.Trajetus</a>
     </div>
+    
     <div class="navbar-right">
       <div class="navbar-nav">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">Home</a>
-        <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
-        <a routerLink="/login" routerLinkActive="active" class="nav-link">Login</a>
+        <!-- Links básicos sempre visíveis -->
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+          Home
+        </a>
+        
+        @if (isLoggedIn()) {
+          <!-- Links quando logado -->
+          <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+            Dashboard
+          </a>
+          
+          <!-- Links específicos do perfil -->
+          @if (selectedProfile === 'gestor') {
+            <a routerLink="/nova-rota" routerLinkActive="active" class="nav-link">
+              <span class="nav-icon">🗺️</span>
+              Nova Rota
+            </a>
+          }
+          
+          @if (selectedProfile === 'usuario') {
+            <a routerLink="/minhas-rotas" routerLinkActive="active" class="nav-link">
+              <span class="nav-icon">📋</span>
+              Minhas Rotas
+            </a>
+          }
+          
+          <!-- Menu de perfil -->
+          <div class="profile-menu-container">
+            <button 
+              class="profile-button" 
+              (click)="toggleProfileMenu()"
+              [class.active]="showProfileMenu()"
+            >
+              <span class="profile-icon">👤</span>
+              <span class="profile-name">{{ userName() }}</span>
+              <span class="profile-role">({{ userRole() }})</span>
+              <span class="dropdown-arrow" [class.rotated]="showProfileMenu()">▼</span>
+            </button>
+            
+            @if (showProfileMenu()) {
+              <div class="profile-dropdown" (click)="$event.stopPropagation()">
+                <div class="profile-header">
+                  <div class="profile-info">
+                    <strong>{{ userName() }}</strong>
+                    <span class="role-badge" [class]="'role-' + selectedProfile">
+                      {{ userRole() }}
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="profile-section">
+                  <label class="profile-section-title">Alternar Perfil:</label>
+                  <div class="profile-options">
+                    <button 
+                      class="profile-option" 
+                      [class.active]="selectedProfile === 'gestor'"
+                      (click)="switchProfile('gestor')"
+                    >
+                      <span class="option-icon">👨‍💼</span>
+                      <span class="option-text">Gestor</span>
+                    </button>
+                    <button 
+                      class="profile-option" 
+                      [class.active]="selectedProfile === 'usuario'"
+                      (click)="switchProfile('usuario')"
+                    >
+                      <span class="option-icon">👤</span>
+                      <span class="option-text">Usuário Comum</span>
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="profile-section">
+                  <label class="profile-section-title">Ações Rápidas:</label>
+                  <div class="quick-actions">
+                    @for (link of getProfileNavLinks(); track link.label) {
+                      <button 
+                        class="quick-action" 
+                        (click)="link.action()"
+                      >
+                        <span class="action-icon">{{ link.icon }}</span>
+                        <span class="action-text">{{ link.label }}</span>
+                      </button>
+                    }
+                    <button 
+                      class="quick-action" 
+                      (click)="navigateToProfileFeature('configuracoes')"
+                    >
+                      <span class="action-icon">⚙️</span>
+                      <span class="action-text">Configurações</span>
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="profile-footer">
+                  <button class="logout-button" (click)="logout()">
+                    <span class="logout-icon">🚪</span>
+                    <span class="logout-text">Sair</span>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <!-- Link de login quando não logado -->
+          <a routerLink="/login" routerLinkActive="active" class="nav-link">
+            Login
+          </a>
+        }
       </div>
     </div>
 
   </div>
+  
+  <!-- Overlay para fechar menu quando clicar fora -->
+  @if (showProfileMenu()) {
+    <div class="profile-overlay" (click)="closeProfileMenu()"></div>
+  }
 </nav>
+

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router'; // Importar Router para navegação
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +11,6 @@ import { Router } from '@angular/router'; // Importar Router para navegação
 })
 export class DashboardComponent {
   
-  // Injetar o Router no construtor
   constructor(private router: Router) {}
 
   userName: string = 'Gestor';
@@ -101,13 +100,43 @@ export class DashboardComponent {
     return Array(rating).fill(0);
   }
 
-  // Método atualizado para navegar para o componente nova-rota
+  // Navegação para nova rota (perfil Gestor)
   createNewRoute(): void {
     this.router.navigate(['/nova-rota']);
+  }
+
+  // Navegação para minhas rotas (perfil Usuário Comum)
+  viewMyRoutes(): void {
+    this.router.navigate(['/minhas-rotas']);
   }
 
   viewDetails(): void {
     console.log('View details button clicked!');
     alert('Funcionalidade "Ver Detalhes" ainda não implementada.');
+  }
+
+  // Método para simular diferentes perfis de usuário
+  switchUserProfile(profile: 'gestor' | 'usuario'): void {
+    this.userName = profile === 'gestor' ? 'Gestor' : 'Usuário';
+    
+    if (profile === 'usuario') {
+      // Redirecionar usuário comum para suas rotas
+      this.router.navigate(['/minhas-rotas']);
+    }
+  }
+
+  // Método para demonstrar funcionalidades baseadas no perfil
+  getUserActions() {
+    return this.userName === 'Gestor' 
+      ? [
+          { label: 'Nova Rota', action: () => this.createNewRoute(), icon: '➕' },
+          { label: 'Gerenciar Usuários', action: () => this.viewDetails(), icon: '👥' },
+          { label: 'Relatórios', action: () => this.viewDetails(), icon: '📊' }
+        ]
+      : [
+          { label: 'Minhas Rotas', action: () => this.viewMyRoutes(), icon: '📋' },
+          { label: 'Histórico', action: () => this.viewDetails(), icon: '📜' },
+          { label: 'Perfil', action: () => this.viewDetails(), icon: '👤' }
+        ];
   }
 }

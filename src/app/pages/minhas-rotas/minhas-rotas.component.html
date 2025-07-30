@@ -1,0 +1,272 @@
+<div class="minhas-rotas-container">
+  <div class="minhas-rotas-header">
+    <div class="header-content">
+      <div class="minhas-rotas-logo">📋</div>
+      <div class="header-info">
+        <h1>Minhas Rotas</h1>
+        <p>Visualize suas rotas atribuídas e gerencie suas entregas</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="atualizarRotas()">
+        🔄 Atualizar
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-resumo">
+    <div class="stat-card">
+      <div class="stat-icon">📦</div>
+      <div class="stat-info">
+        <h3>{{ totalEntregas() }}</h3>
+        <p>Total de Entregas</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">✅</div>
+      <div class="stat-info">
+        <h3>{{ entregasConcluidas() }}</h3>
+        <p>Concluídas</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-info">
+        <h3>{{ entregasPendentes() }}</h3>
+        <p>Pendentes</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-info">
+        <h3>{{ percentualConclusao() }}%</h3>
+        <p>Taxa de Conclusão</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="filtros-section">
+    <div class="filtros-container">
+      <div class="filtro-item">
+        <label for="filtroStatus">Status:</label>
+        <select id="filtroStatus" [(ngModel)]="filtroStatus" (ngModelChange)="aplicarFiltros()">
+          <option value="todos">Todos</option>
+          <option value="ativa">Ativa</option>
+          <option value="concluida">Concluída</option>
+          <option value="pendente">Pendente</option>
+        </select>
+      </div>
+      <div class="filtro-item">
+        <label for="filtroData">Data:</label>
+        <select id="filtroData" [(ngModel)]="filtroData" (ngModelChange)="aplicarFiltros()">
+          <option value="todas">Todas</option>
+          <option value="hoje">Hoje</option>
+          <option value="semana">Esta Semana</option>
+          <option value="mes">Este Mês</option>
+        </select>
+      </div>
+      <div class="filtro-item">
+        <input 
+          type="text" 
+          placeholder="Buscar rota..." 
+          [(ngModel)]="termoBusca"
+          (ngModelChange)="aplicarFiltros()"
+          class="busca-input"
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="rotas-content">
+    @if (rotasFiltradas().length === 0) {
+      <div class="no-rotas">
+        <div class="no-rotas-icon">📭</div>
+        <h3>Nenhuma rota encontrada</h3>
+        <p>Não há rotas que correspondam aos filtros selecionados.</p>
+      </div>
+    } @else {
+      <div class="rotas-list">
+        @for (rota of rotasFiltradas(); track rota.id) {
+          <div class="rota-card" [class]="'status-' + rota.status">
+            <div class="rota-header">
+              <div class="rota-info">
+                <h3>{{ rota.nome }}</h3>
+                <p class="rota-descricao">{{ rota.descricao }}</p>
+                <div class="rota-detalhes">
+                  <span class="detalhe-item">
+                    📅 {{ rota.data | date:'dd/MM/yyyy' }}
+                  </span>
+                  <span class="detalhe-item">
+                    🕐 {{ rota.horaInicio }}
+                  </span>
+                  <span class="detalhe-item">
+                    🚛 {{ rota.veiculo }}
+                  </span>
+                </div>
+              </div>
+              <div class="rota-status">
+                <div class="status-badge" [class]="'status-' + rota.status">
+                  {{ getStatusText(rota.status) }}
+                </div>
+                <div class="progresso-geral">
+                  <div class="progresso-bar">
+                    <div 
+                      class="progresso-fill" 
+                      [style.width.%]="calcularProgressoRota(rota)"
+                    ></div>
+                  </div>
+                  <span class="progresso-text">
+                    {{ calcularProgressoRota(rota) }}% concluído
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="rota-pontos">
+              <div class="ponto origem">
+                <div class="ponto-icon">🏁</div>
+                <div class="ponto-info">
+                  <strong>Origem:</strong> {{ rota.pontoOrigem }}
+                </div>
+              </div>
+              
+              @if (rota.paradas.length > 0) {
+                <div class="paradas-resumo">
+                  <span class="paradas-count">{{ rota.paradas.length }} parada(s) intermediária(s)</span>
+                </div>
+              }
+              
+              <div class="ponto destino">
+                <div class="ponto-icon">🏁</div>
+                <div class="ponto-info">
+                  <strong>Destino:</strong> {{ rota.pontoDestino }}
+                </div>
+              </div>
+            </div>
+
+            <div class="entregas-section">
+              <div class="entregas-header">
+                <h4>Entregas ({{ rota.entregas.length }})</h4>
+                <button 
+                  class="btn-toggle-entregas" 
+                  (click)="toggleEntregasVisibility(rota.id)"
+                >
+                  {{ entregasVisiveis().includes(rota.id) ? '▲' : '▼' }}
+                </button>
+              </div>
+              
+              @if (entregasVisiveis().includes(rota.id)) {
+                <div class="entregas-list">
+                  @for (entrega of rota.entregas; track entrega.id) {
+                    <div class="entrega-item" [class]="'entrega-' + entrega.status">
+                      <div class="entrega-checkbox">
+                        <input 
+                          type="checkbox" 
+                          [checked]="entrega.status === 'concluida'"
+                          [disabled]="entrega.status === 'concluida' || rota.status === 'concluida'"
+                          (change)="toggleEntregaStatus(rota.id, entrega.id)"
+                          class="checkbox-custom"
+                        >
+                      </div>
+                      <div class="entrega-info">
+                        <div class="entrega-endereco">
+                          <strong>{{ entrega.endereco }}</strong>
+                        </div>
+                        <div class="entrega-detalhes">
+                          <span class="entrega-cliente">Cliente: {{ entrega.cliente }}</span>
+                          <span class="entrega-tempo">Tempo estimado: {{ entrega.tempoEstimado }}min</span>
+                          @if (entrega.observacoes) {
+                            <span class="entrega-obs">Obs: {{ entrega.observacoes }}</span>
+                          }
+                        </div>
+                        @if (entrega.status === 'concluida' && entrega.horaConclusao) {
+                          <div class="entrega-conclusao">
+                            ✅ Concluída em {{ entrega.horaConclusao | date:'dd/MM/yyyy HH:mm' }}
+                          </div>
+                        }
+                      </div>
+                      <div class="entrega-status">
+                        <div class="status-icon" [class]="'status-' + entrega.status">
+                          {{ entrega.status === 'concluida' ? '✅' : '⏳' }}
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+                
+                @if (rota.status === 'ativa') {
+                  <div class="entregas-actions">
+                    <button 
+                      class="btn-concluir-todas" 
+                      (click)="concluirTodasEntregas(rota.id)"
+                      [disabled]="todasEntregasConcluidas(rota)"
+                    >
+                      ✅ Concluir Todas
+                    </button>
+                    <button 
+                      class="btn-marcar-problema" 
+                      (click)="marcarProblemaRota(rota.id)"
+                    >
+                      ⚠️ Reportar Problema
+                    </button>
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (message()) {
+    <div class="message" [class]="messageType()">
+      {{ message() }}
+    </div>
+  }
+
+  <!-- Modal de Problema -->
+  @if (showProblemaModal()) {
+    <div class="modal-overlay" (click)="closeProblemaModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Reportar Problema</h3>
+          <button class="modal-close" (click)="closeProblemaModal()">
+            <i class="fas fa-times">✕</i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="tipoProblema">Tipo do Problema:</label>
+          <select id="tipoProblema" [(ngModel)]="problemaFormTipo">
+              <option value="">Selecione o tipo</option>
+              <option value="veiculo">Problema no Veículo</option>
+              <option value="transito">Trânsito/Acidente</option>
+              <option value="cliente">Problema com Cliente</option>
+              <option value="endereco">Endereço Incorreto</option>
+              <option value="carga">Problema na Carga</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="descricaoProblema">Descrição:</label>
+            <textarea 
+              id="descricaoProblema" 
+             [(ngModel)]="problemaFormDescricao"
+              placeholder="Descreva o problema em detalhes..."
+              rows="4"
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeProblemaModal()">
+            Cancelar
+          </button>
+          <button class="btn-primary" (click)="enviarProblema()">
+            Enviar Relatório
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

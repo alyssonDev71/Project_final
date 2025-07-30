@@ -1,4 +1,3 @@
-<!-- Animação de fundo -->
 <div class="background-animation">
   <div class="particle"></div>
   <div class="particle"></div>
@@ -6,14 +5,31 @@
   <div class="particle"></div>
 </div>
 
-<div class="login-container">
-  <!-- Seção do Formulário -->
-  <div class="login-form-section">
-    <div class="login-header">
-      <img src="assets/img/trajetus.png" alt="Logo Trajetus" class="logo">
-      <h2>Acesse sua conta</h2>   
-    </div>
+<div class="auth-container">
+  <div class="auth-header">
+    <img src="assets/img/trajetus.png" alt="Logo Trajetus" class="logo">
+  </div>
 
+  <!-- Abas de Login/Cadastro -->
+  <div class="auth-tabs">
+    <button 
+      class="auth-tab" 
+      [class.active]="isLoginTab" 
+      (click)="switchTab('login')"
+    >
+      Login
+    </button>
+    <button 
+      class="auth-tab" 
+      [class.active]="isRegisterTab" 
+      (click)="switchTab('register')"
+    >
+      Cadastro
+    </button>
+  </div>
+
+  <!-- Formulário de Login -->
+  @if (isLoginTab) {
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
       <div class="form-group">
         <label for="email">Email</label>
@@ -36,16 +52,16 @@
         <label for="password">Senha</label>
         <div class="input-wrapper">
           <input 
-            [type]="showPassword() ? 'text' : 'password'"
+            [type]="isPasswordVisible('password') ? 'text' : 'password'"
             id="password" 
             formControlName="password"
             placeholder="Digite sua senha"
             [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
           >
           <i 
-            [class]="showPassword() ? 'fas fa-eye-slash' : 'fas fa-eye'"
+            [class]="isPasswordVisible('password') ? 'fas fa-eye-slash' : 'fas fa-eye'"
             class="input-icon password-toggle"
-            (click)="togglePasswordVisibility()"
+            (click)="togglePasswordVisibility('password')"
           ></i>
         </div>
         @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
@@ -61,9 +77,134 @@
         <a href="#" class="forgot-password" (click)="onForgotPassword($event)">Esqueceu a senha?</a>
       </div>
 
+      <button 
+        type="submit" 
+        class="btn-primary"
+        [class.loading]="isLoading()"
+        [disabled]="loginForm.invalid || isLoading()"
+      >
+        {{ isLoading() ? '' : 'Entrar' }}
+      </button>
+    </form>
+  }
+
+  <!-- Formulário de Cadastro -->
+  @if (isRegisterTab) {
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <div class="form-group">
+        <label for="regName">Nome Completo</label>
+        <div class="input-wrapper">
+          <input 
+            type="text" 
+            id="regName" 
+            formControlName="name"
+            placeholder="Digite seu nome completo"
+            [class.error]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+          >
+          <i class="fas fa-user input-icon"></i>
+        </div>
+        @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
+          <span class="error-message">Nome é obrigatório</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="regEmail">Email</label>
+        <div class="input-wrapper">
+          <input 
+            type="email" 
+            id="regEmail" 
+            formControlName="email"
+            placeholder="Digite seu email"
+            [class.error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+          >
+          <i class="fas fa-envelope input-icon"></i>
+        </div>
+        @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+          <span class="error-message">Email é obrigatório e deve ser válido</span>
+        }
+      </div>
+
+      <!-- Seção de Tipo de Usuário -->
+      <div class="user-type-section">
+        <label class="user-type-label">Tipo de Usuário</label>
+        <div class="user-type-options">
+          <div class="user-type-option">
+            <input 
+              type="radio" 
+              id="userTypeCommon" 
+              value="common" 
+              formControlName="userType"
+              class="user-type-radio"
+            >
+            <label for="userTypeCommon" class="user-type-card">
+              <i class="fas fa-user user-type-icon"></i>
+              <div class="user-type-title">Usuário Comum</div>
+              <div class="user-type-description">Acesso padrão às funcionalidades da plataforma</div>
+            </label>
+          </div>
+          <div class="user-type-option">
+            <input 
+              type="radio" 
+              id="userTypeManager" 
+              value="manager" 
+              formControlName="userType"
+              class="user-type-radio"
+            >
+            <label for="userTypeManager" class="user-type-card">
+              <i class="fas fa-user-tie user-type-icon"></i>
+              <div class="user-type-title">Gestor</div>
+              <div class="user-type-description">Acesso administrativo e relatórios avançados</div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regPassword">Senha</label>
+        <div class="input-wrapper">
+          <input 
+            [type]="isPasswordVisible('regPassword') ? 'text' : 'password'"
+            id="regPassword" 
+            formControlName="password"
+            placeholder="Digite sua senha (mín. 6 caracteres)"
+            [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+          >
+          <i 
+            [class]="isPasswordVisible('regPassword') ? 'fas fa-eye-slash' : 'fas fa-eye'"
+            class="input-icon password-toggle"
+            (click)="togglePasswordVisibility('regPassword')"
+          ></i>
+        </div>
+        @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+          <span class="error-message">Senha é obrigatória (mínimo 6 caracteres)</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar Senha</label>
+        <div class="input-wrapper">
+          <input 
+            [type]="isPasswordVisible('confirmPassword') ? 'text' : 'password'"
+            id="confirmPassword" 
+            formControlName="confirmPassword"
+            placeholder="Confirme sua senha"
+            [class.error]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
+          >
+          <i 
+            [class]="isPasswordVisible('confirmPassword') ? 'fas fa-eye-slash' : 'fas fa-eye'"
+            class="input-icon password-toggle"
+            (click)="togglePasswordVisibility('confirmPassword')"
+          ></i>
+        </div>
+        @if (registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched) {
+          <span class="error-message">As senhas não coincidem</span>
+        }
+      </div>
+
       <!-- Seção de Termos e Condições LGPD -->
       <div class="terms-section">
-        <label class="terms-checkbox-label" [class.error]="loginForm.get('acceptTerms')?.invalid && loginForm.get('acceptTerms')?.touched">
+        <label class="terms-checkbox-label" [class.error]="registerForm.get('acceptTerms')?.invalid && registerForm.get('acceptTerms')?.touched">
           <input 
             type="checkbox" 
             formControlName="acceptTerms"
@@ -81,69 +222,36 @@
             em conformidade com a LGPD
           </span>
         </label>
-        @if (loginForm.get('acceptTerms')?.invalid && loginForm.get('acceptTerms')?.touched) {
+        @if (registerForm.get('acceptTerms')?.invalid && registerForm.get('acceptTerms')?.touched) {
           <span class="error-message">É obrigatório aceitar os termos e condições</span>
         }
       </div>
 
       <button 
         type="submit" 
-        class="btn-login"
+        class="btn-primary"
         [class.loading]="isLoading()"
-        [disabled]="loginForm.invalid || isLoading()"
+        [disabled]="registerForm.invalid || isLoading()"
       >
-        {{ isLoading() ? '' : 'Entrar' }}
+        {{ isLoading() ? '' : 'Criar Conta' }}
       </button>
     </form>
+  }
 
-    <div class="divider">
-      <span>ou</span>
-    </div>
-
-    <button class="btn-google" (click)="onGoogleLogin()" [disabled]="isLoading()">
-      <i class="fab fa-google google-icon"></i>
-      Continuar com Google
-    </button>
-
-    <div class="login-footer">
-      <p>
-        Não tem uma conta? 
-        <a href="#" class="signup-link" (click)="onSignUp($event)">Criar conta</a>
-      </p>
-    </div>
-
-    @if (message()) {
-      <div class="message" [class]="messageType()">
-        {{ message() }}
-      </div>
-    }
+  <div class="divider">
+    <span>ou</span>
   </div>
 
-  <div class="login-visual">
-    <div class="visual-overlay"></div>
-    <div class="visual-content">
-      <h3>Bem-vindo à Trajetus</h3>
-      <p class="visual-subtitle">Tecnologia inteligente para logística moderna</p>
-      <div class="feature-list">
-        <div class="feature-item">
-          <i class="fas fa-route feature-icon"></i>
-          <span>Otimização de Rotas</span>
-        </div>
-        <div class="feature-item">
-          <i class="fas fa-chart-line feature-icon"></i>
-          <span>Dashboard Avançado</span>
-        </div>
-        <div class="feature-item">
-          <i class="fas fa-truck feature-icon"></i>
-          <span>Monitoramento em Tempo Real</span>
-        </div>
-        <div class="feature-item">
-          <i class="fas fa-leaf feature-icon"></i>
-          <span>Logística Sustentável</span>
-        </div>
-      </div>
+  <button class="btn-google" (click)="onGoogleLogin()" [disabled]="isLoading()">
+    <i class="fab fa-google google-icon"></i>
+    {{ isLoginTab ? 'Continuar com Google' : 'Cadastrar com Google' }}
+  </button>
+
+  @if (message()) {
+    <div class="message" [class]="messageType()">
+      {{ message() }}
     </div>
-  </div>
+  }
 </div>
 
 <!-- Modal de Termos e Condições -->
@@ -173,8 +281,9 @@
           <h4>2. Dados Coletados</h4>
           <p>Os seguintes dados podem ser coletados:</p>
           <ul>
-            <li>Endereço de email</li>
+            <li>Nome completo e endereço de email</li>
             <li>Informações de login e autenticação</li>
+            <li>Tipo de usuário (comum ou gestor)</li>
             <li>Dados de navegação e uso da plataforma</li>
             <li>Informações fornecidas voluntariamente pelo usuário</li>
           </ul>
@@ -207,7 +316,7 @@
           <p>
             Para exercer seus direitos ou esclarecer dúvidas sobre o tratamento 
             de seus dados, entre em contato através do email: 
-            <a href="mailto:privacidade&#64;trajetus.com.br">privacidade&#64;trajetus.com.br</a>
+            <a href="mailto:privacidade@trajetus.com.br">privacidade&#64;trajetus.com.br</a>
           </p>
 
           <p class="terms-footer">
@@ -224,4 +333,3 @@
     </div>
   </div>
 }
-

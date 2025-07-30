@@ -1,60 +1,267 @@
 <div class="nova-rota-container">
-    <div class="nova-rota-header">
-        <div class="header-content">
-            <div class="nova-rota-logo">🚛</div>
-            <div class="header-info">
-                <h1>Nova Rota</h1>
-                <p>Crie uma nova rota de entrega otimizada</p>
-            </div>
-        </div>
-        <div class="header-actions">
-            <button class="btn-secondary" (click)="voltarDashboard()">← Voltar</button>
-        </div>
+  <div class="nova-rota-header">
+    <div class="header-content">
+      <div class="nova-rota-logo">🗺️</div>
+      <div class="header-info">
+        <h1>Criar Nova Rota</h1>
+        <p>Configure uma nova rota de entrega com pontos de parada otimizados</p>
+      </div>
     </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="cancelarCriacao()">Cancelar</button>
+    </div>
+  </div>
 
-    <div class="nova-rota-form">
-        <div class="form-section">
-            <h2>Informações da Rota</h2>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Origem</label>
-                    <input type="text" placeholder="Digite o endereço de origem" />
-                </div>
-                <div class="form-group">
-                    <label>Destino</label>
-                    <input type="text" placeholder="Digite o endereço de destino" />
-                </div>
-                <div class="form-group">
-                    <label>Tipo de Veículo</label>
-                    <select>
-                        <option>Selecione o tipo de veículo</option>
-                        <option>🚚 Van</option>
-                        <option>🚛 Caminhão Pequeno</option>
-                        <option>🚐 Caminhão Grande</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Data da Entrega</label>
-                    <input type="date" />
-                </div>
-            </div>
+  <div class="nova-rota-content">
+    <div class="form-section">
+      <h2 class="section-title">Informações da Rota</h2>
+      
+      <form [formGroup]="novaRotaForm" (ngSubmit)="salvarRota()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nomeRota">Nome da Rota</label>
+            <input 
+              type="text" 
+              id="nomeRota" 
+              formControlName="nome"
+              placeholder="Ex: São Paulo - Santos Express"
+              [class.error]="novaRotaForm.get('nome')?.invalid && novaRotaForm.get('nome')?.touched"
+            >
+            @if (novaRotaForm.get('nome')?.invalid && novaRotaForm.get('nome')?.touched) {
+              <span class="error-message">Nome da rota é obrigatório</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="dataRota">Data da Rota</label>
+            <input 
+              type="date" 
+              id="dataRota" 
+              formControlName="data"
+              [class.error]="novaRotaForm.get('data')?.invalid && novaRotaForm.get('data')?.touched"
+            >
+            @if (novaRotaForm.get('data')?.invalid && novaRotaForm.get('data')?.touched) {
+              <span class="error-message">Data é obrigatória</span>
+            }
+          </div>
         </div>
 
-        <div class="form-section">
-            <h2>Paradas</h2>
-            <div class="paradas-list">
-                <div class="parada-item">
-                    <span class="parada-numero">1</span>
-                    <input type="text" placeholder="Endereço da parada" />
-                    <button class="btn-remove">×</button>
-                </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="horaInicio">Hora de Início</label>
+            <input 
+              type="time" 
+              id="horaInicio" 
+              formControlName="horaInicio"
+              [class.error]="novaRotaForm.get('horaInicio')?.invalid && novaRotaForm.get('horaInicio')?.touched"
+            >
+            @if (novaRotaForm.get('horaInicio')?.invalid && novaRotaForm.get('horaInicio')?.touched) {
+              <span class="error-message">Hora de início é obrigatória</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="veiculo">Veículo</label>
+            <select 
+              id="veiculo" 
+              formControlName="veiculo"
+              [class.error]="novaRotaForm.get('veiculo')?.invalid && novaRotaForm.get('veiculo')?.touched"
+            >
+              <option value="">Selecione um veículo</option>
+              <option value="caminhao-pequeno">Caminhão Pequeno (3,5t)</option>
+              <option value="caminhao-medio">Caminhão Médio (7t)</option>
+              <option value="caminhao-grande">Caminhão Grande (14t)</option>
+              <option value="van">Van de Carga</option>
+            </select>
+            @if (novaRotaForm.get('veiculo')?.invalid && novaRotaForm.get('veiculo')?.touched) {
+              <span class="error-message">Selecione um veículo</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="descricao">Descrição</label>
+          <textarea 
+            id="descricao" 
+            formControlName="descricao"
+            placeholder="Descreva detalhes importantes da rota..."
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="pontos-section">
+          <h3 class="subsection-title">Pontos da Rota</h3>
+          
+          <div class="ponto-item origem">
+            <div class="ponto-icon">🏁</div>
+            <div class="ponto-info">
+              <label for="pontoOrigem">Ponto de Origem</label>
+              <input 
+                type="text" 
+                id="pontoOrigem" 
+                formControlName="pontoOrigem"
+                placeholder="Ex: Centro de Distribuição - São Paulo, SP"
+                [class.error]="novaRotaForm.get('pontoOrigem')?.invalid && novaRotaForm.get('pontoOrigem')?.touched"
+              >
+              @if (novaRotaForm.get('pontoOrigem')?.invalid && novaRotaForm.get('pontoOrigem')?.touched) {
+                <span class="error-message">Ponto de origem é obrigatório</span>
+              }
             </div>
-            <button class="btn-add-parada">+ Adicionar Parada</button>
+          </div>
+
+          <div class="paradas-container">
+            <div class="paradas-header">
+              <h4>Paradas Intermediárias</h4>
+              <button type="button" class="btn-add-parada" (click)="adicionarParada()">
+                <span>+</span> Adicionar Parada
+              </button>
+            </div>
+            
+            <div class="paradas-list">
+              @for (parada of paradas(); track parada.id) {
+                <div class="ponto-item parada">
+                  <div class="ponto-icon">📍</div>
+                  <div class="ponto-info">
+                    <label>Parada {{ parada.ordem }}</label>
+                    <input 
+                      type="text" 
+                      [(ngModel)]="parada.endereco"
+                      [ngModelOptions]="{standalone: true}"
+                      placeholder="Ex: Rua das Flores, 123 - Santos, SP"
+                    >
+                    <div class="parada-detalhes">
+                      <input 
+                        type="number" 
+                        [(ngModel)]="parada.tempoEstimado"
+                        [ngModelOptions]="{standalone: true}"
+                        placeholder="Tempo (min)"
+                        min="5"
+                        max="120"
+                      >
+                      <input 
+                        type="text" 
+                        [(ngModel)]="parada.observacoes"
+                        [ngModelOptions]="{standalone: true}"
+                        placeholder="Observações"
+                      >
+                    </div>
+                  </div>
+                  <button type="button" class="btn-remove-parada" (click)="removerParada(parada.id)">
+                    ✕
+                  </button>
+                </div>
+              }
+              
+              @if (paradas().length === 0) {
+                <div class="no-paradas">
+                  <p>Nenhuma parada adicionada. Clique em "Adicionar Parada" para incluir pontos intermediários.</p>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="ponto-item destino">
+            <div class="ponto-icon">🏁</div>
+            <div class="ponto-info">
+              <label for="pontoDestino">Ponto de Destino</label>
+              <input 
+                type="text" 
+                id="pontoDestino" 
+                formControlName="pontoDestino"
+                placeholder="Ex: Centro de Distribuição - Santos, SP"
+                [class.error]="novaRotaForm.get('pontoDestino')?.invalid && novaRotaForm.get('pontoDestino')?.touched"
+              >
+              @if (novaRotaForm.get('pontoDestino')?.invalid && novaRotaForm.get('pontoDestino')?.touched) {
+                <span class="error-message">Ponto de destino é obrigatório</span>
+              }
+            </div>
+          </div>
         </div>
 
         <div class="form-actions">
-            <button class="btn-primary">Criar Rota</button>
-            <button class="btn-secondary" (click)="voltarDashboard()">Cancelar</button>
+          <button type="button" class="btn-secondary" (click)="cancelarCriacao()">
+            Cancelar
+          </button>
+          <button 
+            type="submit" 
+            class="btn-primary"
+            [class.loading]="isLoading()"
+            [disabled]="novaRotaForm.invalid || isLoading()"
+          >
+            {{ isLoading() ? '' : 'Salvar Rota' }}
+          </button>
         </div>
+      </form>
     </div>
+
+    <div class="mapa-section">
+      <h2 class="section-title">Visualização da Rota</h2>
+      
+      <div class="mapa-container">
+        <div class="mapa-simulado">
+          <div class="mapa-header">
+            <span class="mapa-title">🗺️ Mapa Interativo</span>
+            <div class="mapa-controls">
+              <button type="button" class="mapa-btn" (click)="centralizarMapa()">📍</button>
+              <button type="button" class="mapa-btn" (click)="otimizarRota()">⚡</button>
+            </div>
+          </div>
+          
+          <div class="mapa-area">
+            <!-- Simulação de mapa com pontos -->
+            <div class="mapa-ponto origem-mapa" 
+                 [style.left.%]="pontoOrigemPosicao.x" 
+                 [style.top.%]="pontoOrigemPosicao.y">
+              <div class="ponto-marker origem">🏁</div>
+              <div class="ponto-label">Origem</div>
+            </div>
+            
+            @for (parada of paradasMapa(); track parada.id) {
+              <div class="mapa-ponto parada-mapa" 
+                   [style.left.%]="parada.posicao.x" 
+                   [style.top.%]="parada.posicao.y">
+                <div class="ponto-marker parada">{{ parada.ordem }}</div>
+                <div class="ponto-label">Parada {{ parada.ordem }}</div>
+              </div>
+            }
+            
+            <div class="mapa-ponto destino-mapa" 
+                 [style.left.%]="pontoDestinoPosicao.x" 
+                 [style.top.%]="pontoDestinoPosicao.y">
+              <div class="ponto-marker destino">🏁</div>
+              <div class="ponto-label">Destino</div>
+            </div>
+            
+            <!-- Linha da rota -->
+            @if (paradas().length > 0 || (novaRotaForm.get('pontoOrigem')?.value && novaRotaForm.get('pontoDestino')?.value)) {
+              <svg class="rota-linha" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path [attr.d]="rotaPath()" stroke="#4facfe" stroke-width="0.3" fill="none" stroke-dasharray="1,0.5"/>
+              </svg>
+            }
+          </div>
+          
+          <div class="mapa-info">
+            <div class="info-item">
+              <span class="info-label">Distância Total:</span>
+              <span class="info-value">{{ distanciaTotal() }} km</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Tempo Estimado:</span>
+              <span class="info-value">{{ tempoTotal() }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Paradas:</span>
+              <span class="info-value">{{ paradas().length }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (message()) {
+    <div class="message" [class]="messageType()">
+      {{ message() }}
+    </div>
+  }
 </div>
